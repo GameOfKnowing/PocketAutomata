@@ -1,0 +1,23 @@
+/************************************************************
+*            Pocket Automata Bill of Materials              *
+*                    By Daniel Lytle 						*
+*                  danieljlytle@aol.com						*
+*  Recommended components and sources for building your own	*
+*   Pocket Automata device. Please let me know if any of 	*
+*    these components are discontinued/approaching EOL.     *
+************************************************************/
+
+Display: Nokia 5110 (flexible sourcing)
+	Recommended suppliers: 
+		https://www.adafruit.com/product/338
+		https://www.sparkfun.com/products/10168
+		
+Microcontroller: Adafruit Trinket 3.3V
+	Recommended supplier: 
+		https://www.adafruit.com/product/1500
+		
+Hardware & misc.: ~1.5ft. ~22AWG solid-core hookup wire. 
+				  4 x 3/8" 4-40 machine screws
+				  
+Tools: Soldering iron, solder, wire stripper, flush cutter, screw driver, 
+CA or E6000 adhesive, heat-shrink tubing (optional)
