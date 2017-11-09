@@ -1,0 +1,6 @@
+#ignores PDF's and compiled stuff
+*.pdf
+*.o
+*.elf
+*.hex
+*.DS_Store
