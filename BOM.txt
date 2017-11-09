@@ -12,7 +12,7 @@ Display: Nokia 5110 (flexible sourcing)
 		https://www.adafruit.com/product/338
 		https://www.sparkfun.com/products/10168
 		
-Microcontroller: Adafruit Trinket 3.3V
+Microcontroller: Adafruit Trinket 3.3V (or similar ATtiny85 dev board)
 	Recommended supplier: 
 		https://www.adafruit.com/product/1500
 		
