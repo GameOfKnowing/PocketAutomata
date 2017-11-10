@@ -12,10 +12,12 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-#define DO PB1
 #define DC PB0
+#define DO PB1
 #define SCLK PB2
 #define XDIM 84
 #define YDIM 6
 
 uint8_t currentDisplay[XDIM][YDIM];
+
+void blink();

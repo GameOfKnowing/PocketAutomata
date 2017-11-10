@@ -29,17 +29,16 @@ int main(void) {
 	drawScreen(currentDisplay);
 
 	while(1){
-		PORTB |= (1<<DO);
-		_delay_ms(500);
-		PORTB &= ~(1<<DO);
-		
-		
-		rule110(currentDisplay);
+		blink();
+		rule110();
 		drawScreen(currentDisplay);
-		PORTB |= (1<<DO);
-		_delay_ms(1000);
-		PORTB &= ~(1<<DO);
-		_delay_ms(1001);
 		_delay_ms(5000);
 	}
+}
+
+void blink(){
+	PORTB |= (1<<DO);
+	_delay_ms(500);
+	PORTB &= ~(1<<DO);
+	_delay_ms(500);
 }

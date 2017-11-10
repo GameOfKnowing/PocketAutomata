@@ -9,12 +9,12 @@
 #include "tinyEEPROM.h"
 
 void rule110(){
-	if ((XDIM > 2) && (YDIM >> 2)){
+	if ((XDIM > 2) && (YDIM > 2)){
 		uint8_t i;
 		uint8_t j;
 		uint8_t k;
 		for(i = 0; i < XDIM; i++){
-			for(j = 0; j < YDIM; i++){
+			for(j = 0; j < YDIM; j++){
 				uint8_t	result = 0x00; 			
 				for(k = 0; k < 8; k++){
 					bool A; 
@@ -48,13 +48,17 @@ void rule110(){
 						result |= (1<<k);
 					}
 				}
-				writeEByte((1+XDIM)*(1+YDIM), result);
+				writeEByte((i*YDIM) + j, result);
 			}
 		}
 		
-		for(i = 0; i < XDIM; i++){
-			for(j = 0; j < YDIM; i++){
-				currentDisplay[i][j] = readEByte((1+XDIM)*(1+YDIM));
+		blink();
+		blink();
+		blink();
+		
+		for(i = 0; i < XDIM; i++){	//loads the next step/frame from EEPROM to currentDisplay
+			for(j = 0; j < YDIM; j++){
+				currentDisplay[i][j] = readEByte((i*YDIM)+j);
 			}
 		}
 	}

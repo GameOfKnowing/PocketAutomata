@@ -23,7 +23,7 @@ uint8_t readEByte(uint16_t address){
 void writeEByte(uint16_t address, uint8_t byte){
 	//waits until last write is done
 	while(EECR & (1 << EEPE));
-	//sets atomic read mode
+	//sets atomic write mode
 	EECR &= ~(0x30);
 	//clears address registers & loads address into it
 	EEARL &= (0x00);
