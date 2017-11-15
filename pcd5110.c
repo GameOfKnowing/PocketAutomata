@@ -25,11 +25,18 @@ void initDisplay(){
 	// USI as clock
 	USICR |= (1<<USIOIE) | (1<<USICS0);
 
-	funcSet(0, 1, 1);
+	funcSet(0, 1, 1); //exteded instrution set
 	biasSet(4); //sets display bias
+<<<<<<< HEAD
 	VSet(25); //sets display voltage/contrast
 	funcSet(0, 1, 0); 
 	dispConfig(4); // 0 - blank, 2 - normal, 1 - all on
+=======
+	VSet(127); //sets display voltage/contrast
+	funcSet(0, 1, 0); //basic instrution set
+	dispConfig(4); // 0 - blank, 4 - normal, 1 - all on, 5- inverted
+	//dispConfig(1); //Tests display with all pixels on
+>>>>>>> 27939f6329b8f8e470ca1c729a08097f953241e5
 }
 
 //draws the full screen
@@ -91,10 +98,10 @@ void funcSet(uint8_t PD, uint8_t V, uint8_t H){
 	sendByte(false, command);
 }
 
-//sets display power bias
+//sets display voltage bias
 void biasSet(uint8_t bias){
 	if(bias < 8){
-		command = 16 + bias;
+		uint8_t command = 16 + bias;
 		sendByte(false, command);
 	}
 }
@@ -102,7 +109,7 @@ void biasSet(uint8_t bias){
 //sets display voltage
 void VSet(uint8_t voltage){
 	if(voltage < 128){
-		command = 128 + voltage;
+		uint8_t command = 128 + voltage;
 		sendByte(false, command);
 	}
 }
@@ -110,7 +117,7 @@ void VSet(uint8_t voltage){
 //sets display output mode
 void dispConfig(uint8_t config){
 	if(config < 8){
-		command = 8 + config;
+		uint8_t command = 8 + config;
 		sendByte(false, command);
 	}
 }
@@ -130,12 +137,12 @@ void sendByte(bool isData, uint8_t byte){
 	USISR |= (1<<USIOIF); //clears counter overflow flag
 	USICR |= (1<<USIWM0); //sets 3-wire mode
 	sei();//enables global interrupts
-	while(USICR & (1<<USIWM0));
-	cli();
+	while(USICR & (1<<USIWM0)); //waits until 3-wire mode has been turned off by the ISR
+	cli();//disables global interrupts
 }
 
 //turns off global interrupts (& therefore USI clock) once a byte has been transmitted
 ISR(USI_OVF_vect){
-	USICR &= ~(1<<USIWM0);
+	USICR &= ~(1<<USIWM0); //turns off 3-wire mode
 	USISR |= (1<<USIOIF); //clears counter overflow flag
 }
