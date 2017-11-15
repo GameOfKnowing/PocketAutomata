@@ -27,7 +27,7 @@ void initDisplay(){
 
 	funcSet(0, 1, 1);
 	biasSet(4); //sets display bias
-	VSet(50); //sets display voltage/contrast
+	VSet(25); //sets display voltage/contrast
 	funcSet(0, 1, 0); 
 	dispConfig(4); // 0 - blank, 2 - normal, 1 - all on
 }

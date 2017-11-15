@@ -12,8 +12,8 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
-#define DC PB0
-#define DO PB1
+#define DC PB1
+#define DO PB0
 #define SCLK PB2
 #define XDIM 84
 #define YDIM 6
