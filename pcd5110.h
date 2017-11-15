@@ -13,7 +13,7 @@ void initDisplay();
 void splashScreen();
 
 //draws the full screen
-void drawScreen(uint8_t newScreen[XDIM][YDIM]);
+void drawScreen();
 
 //switches state of one pixel, leaving the rest the same
 void switchPixel( uint8_t x, uint8_t y);
@@ -35,3 +35,7 @@ void dispConfig(uint8_t config);
 
 //sends a command or data byte to the display controller
 void sendByte(bool isData, uint8_t byte);
+
+//pulses SCLK
+
+void pulseClock();

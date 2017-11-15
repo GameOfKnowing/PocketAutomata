@@ -13,35 +13,17 @@ uint8_t commandPlace = 7;
 
 //initializes and clears display
 void initDisplay(){	
-
-	// CTC mode
-	TCCR0A |= (1<<WGM01);
-	//prescaler = 0
-	TCCR0B |=  (1<<CS00);
-	//counts to 2
-	OCR0A |= 0x02;
-	TCNT0 &= 0x00;
-	//enables SPI cnt. overflow interrupt, selects Counter0 comp. match
-	// USI as clock
-	USICR |= (1<<USIOIE) | (1<<USICS0);
-
 	funcSet(0, 1, 1); //exteded instrution set
 	biasSet(4); //sets display bias
 	VSet(25); //sets display voltage/contrast
 	funcSet(0, 1, 0); 
 	dispConfig(4); // 0 - blank, 2 - normal, 1 - all on
-	//dispConfig(1); //Tests display with all pixels on
 }
 
 //draws the full screen
-void drawScreen(uint8_t newScreen[XDIM][YDIM]){
+void drawScreen(){
 	int i;
 	int j;
-	for(i = 0; i < XDIM; i++){
-		for(j = 0; j < YDIM; j++){
-			currentDisplay[i][j] = newScreen[i][j];
-		}
-	}
 	for (i = 0; i < XDIM; i++) {
 		for (j = 0; j < YDIM; j++){
 			sendByte(true, currentDisplay[i][j]);
@@ -80,13 +62,13 @@ bool getPixel(uint8_t x, uint8_t y){
 void funcSet(uint8_t PD, uint8_t V, uint8_t H){
 	uint8_t command = 32;
 	if(PD){
-		command |= (1 << 2);
+		command |= (0x03);
 	}
 	if(V){
-		command |= (1 << 1);
+		command |= (0x02);
 	}
 	if(H){
-		command |= (0b1);
+		command |= (0x01);
 	}
 		
 	sendByte(false, command);
@@ -118,7 +100,6 @@ void dispConfig(uint8_t config){
 
 //sends a command or data byte to the display controller
 void sendByte(bool isData, uint8_t byte){
-	USICR &= ~(1<<USIWM0);
 	
 	if(isData){
 		PORTB |= (1<<DC); //indicates screen data transfer
@@ -126,17 +107,15 @@ void sendByte(bool isData, uint8_t byte){
 	else{ 
 		PORTB &= ~(1<<DC); //indicates display command transfer
 	}
-	USIDR &= (0x00); //clears data register
-	USIDR |= (byte); //loads byte into data register
-	USISR |= (1<<USIOIF); //clears counter overflow flag
-	USICR |= (1<<USIWM0); //sets 3-wire mode
-	sei();//enables global interrupts
-	while(USICR & (1<<USIWM0)); //waits until 3-wire mode has been turned off by the ISR
-	cli();//disables global interrupts
+	int i;
+	for(i = 7; i >= 0; i--){
+		PORTB &= ~(1<<DO);
+		PORTB |= ((byte >> i) & 0x01);
+		pulseClock();
+	}
 }
-
-//turns off global interrupts (& therefore USI clock) once a byte has been transmitted
-ISR(USI_OVF_vect){
-	USICR &= ~(1<<USIWM0); //turns off 3-wire mode
-	USISR |= (1<<USIOIF); //clears counter overflow flag
+	
+void pulseClock(){
+	PORTB |= (1 << SCLK);
+	PORTB &= ~(1 << SCLK);
 }

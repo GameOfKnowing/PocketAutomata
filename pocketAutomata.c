@@ -15,30 +15,30 @@ int main(void) {
 	DDRB |= (1<<DO)|(1<<DC)|(1<<SCLK); //sets data out, clock, and DC pins as outputs
 	PORTB &= ~(1<<DC); //sets DC to 0
 
-    int i = 0;
-    int j = 0;
+    uint8_t i = 0;
+    int8_t j = 0;
     
     //Creates starting configuration with pseudo-random values
     for(i = 0; i < XDIM; i++){
     	for(j = 0; j < YDIM; j++){
-    		currentDisplay[i][j] = (uint8_t) (rand() % 256);
+    		currentDisplay[i][j] = j;
     	}
     } 
     
 	initDisplay();
-	drawScreen(currentDisplay);
+	drawScreen();
 
 	while(1){
 		blink();
 		rule110();
-		drawScreen(currentDisplay);
+		drawScreen();
 		_delay_ms(5000);
 	}
 }
 
 void blink(){
-	PORTB |= (1<<DO);
-	_delay_ms(500);
-	PORTB &= ~(1<<DO);
-	_delay_ms(500);
+	PORTB |= (1<<DC);
+	_delay_ms(250);
+	PORTB &= ~(1<<DC);
+	_delay_ms(250);
 }

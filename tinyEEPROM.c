@@ -10,10 +10,9 @@
 uint8_t readEByte(uint16_t address){
 	while(EECR & (1 << EEPE));
 	//clears address registers & loads address into it
-	EEARL &= (0x00);
 	EEARH &= ~(0x01);
-	EEARL |= address;
-	EEARH |= (address >> 8);
+	EEARH |= (uint8_t) ((address>>8) & (0x01));
+	EEARL = (uint8_t) (address & ~(0x10));
 	//starts read
 	EECR |= (0x01);
 	//returns read data
@@ -25,14 +24,10 @@ void writeEByte(uint16_t address, uint8_t byte){
 	while(EECR & (1 << EEPE));
 	//sets atomic write mode
 	EECR &= ~(0x30);
-	//clears address registers & loads address into it
-	EEARL &= (0x00);
-	EEARH &= ~(0x01);
-	EEARL |= address;
-	EEARH |= (address >> 8);
+	//clears address registers & loads address into them
+	EEAR = address;
 	//puts byte in data register
-	EEDR &= (0x00);
-	EEDR |= byte;
+	EEDR = byte;
 	//enables writing and writes
 	EECR |= (1<<EEMPE);
 	EECR |= (1<<EEPE);
