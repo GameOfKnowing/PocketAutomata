@@ -27,16 +27,10 @@ void initDisplay(){
 
 	funcSet(0, 1, 1); //exteded instrution set
 	biasSet(4); //sets display bias
-<<<<<<< HEAD
 	VSet(25); //sets display voltage/contrast
 	funcSet(0, 1, 0); 
 	dispConfig(4); // 0 - blank, 2 - normal, 1 - all on
-=======
-	VSet(127); //sets display voltage/contrast
-	funcSet(0, 1, 0); //basic instrution set
-	dispConfig(4); // 0 - blank, 4 - normal, 1 - all on, 5- inverted
 	//dispConfig(1); //Tests display with all pixels on
->>>>>>> 27939f6329b8f8e470ca1c729a08097f953241e5
 }
 
 //draws the full screen
