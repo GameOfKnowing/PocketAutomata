@@ -1,74 +1,72 @@
-/************************************************************
-*                       rule110.h                           *
-*                    By Daniel Lytle 						*
-*                  danieljlytle@aol.com						*
-*            Runs the Rule 110 cellular automation 	        *
-*    on binary arrays. Designed for Pocket Automata.        *
-************************************************************/
+/******************************************************
+*                       rule110.c                     *
+*                    By Daniel Lytle 				  *
+*                  danieljlytle@aol.com				  *
+*  Functions for processing the next line in an elem- *
+*  entary cellular automata simulation with rule 110. *
+*  			   Designed for Pocket Automata.  		  *
+******************************************************/
 #include "pocketAutomata.h"
 
-void rule110(){
+void rule110(uint8_t lineNum){
+	if (lineNum < 8){
 		uint8_t i;
-		uint8_t j;
-		uint8_t k;
 		for(i = 0; i < XDIM; i++){
-			for(j = 0; j < YDIM; j++){
-				uint8_t result = 0x00;	
-				for(k = 0; k < 8; k++){
-					if ((j == 0) && (k == 0)){
-						result = currentDisplay[i][0];
-					}
-					else{
-						//generates rule 110 input A
-						bool A;
-						if(i > 0){
-							if(k > 0){
-								A = !!((1 << (k-1)) & currentDisplay[i-1][j]);
-							}
-							else{
-								A = !!(0x80 & currentDisplay[i-1][j-1]);
-							}
-						}
-						else{
-							A = false;
-						}						
-						
-						//generates rule 110 input B
-						bool B;
-						if (k > 0){
-							B = !!((1 << (k-1)) & currentDisplay[i][j]);
-						}
-						else {
-							B = !!((0x80) & currentDisplay[i][j-1]);
-						}
-						
-						//generates rule 110 input C
-						bool C;
-						if( i < XDIM){
-							if(k > 0){
-								C = !!((1 << (k-1)) & currentDisplay[i+1][j]);
-							}
-							else{
-								C = !!(0x80 & currentDisplay[i+1][j-1]);
-							}
-						}
-						else{
-							C = false;
-						}
-	
-						//generates next pixel state
-						if(!((A && B) && C) && (B || C)){
-							result |= (1 << k);
-						}
-					}
+			bool A; //top left input
+			bool B; //top middle input
+			bool C; //top right input
+			if (lineNum != 0){
+				newRow[i] = lastRow[i];
+				//generates rule 110 input A
+				if(i > 0){
+					A = !!((1 << (lineNum - 1)) & lastRow[i-1]);
 				}
-				writeEByte((i*YDIM) + j, result);
+				else{
+					A = false;
+				}
+				
+				//generates rule 110 input B
+				B = !!((1 << (lineNum - 1)) & lastRow[i]);
+				
+				//generates rule 110 input C
+				if(i < (XDIM -1)){
+					C = !!((1 << (lineNum - 1)) & lastRow[i+1]);
+				}
+				else{
+					C = false;
+				}	
+			}
+			else{ //for the LSB/first row of each byte
+				newRow[i] = 0x00;
+				//generates rule 110 input A
+				if(i > 0){
+					A = !!(0x80 & lastRow[i-1]);
+				}
+				else{
+					A = false;
+				}
+				
+				//generates rule 110 input B
+				B = !!(0x80 & lastRow[i]);
+				
+				//generates rule 110 input C
+				if(i < (XDIM -1)){
+					C = !!(0x80 & lastRow[i+1]);
+				}
+				else{
+					C = false;
+				}
+			}
+			
+			//clears prev. pixel state before determining new one; disable to create more organic/ glitchy outputs
+			//newRow[i] &= ~(1 << lineNum);
+			
+			if(!(A && B && C) && (B || C)){
+				newRow[i] |= (1 << lineNum);
 			}
 		}
-		
-		for(i = 0; i < XDIM; i++){	//loads the next step/frame from EEPROM to currentDisplay
-			for(j = 0; j < YDIM; j++){
-				currentDisplay[i][j] = readEByte((i * YDIM) + j);
-			}
-		}
+		for(i = 0; i < XDIM; i++){
+			lastRow[i] = newRow[i];
+		} 
+	}
 }

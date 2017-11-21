@@ -7,34 +7,33 @@
 *********************************************************/
 #include "pocketAutomata.h"
 
-bool data = false;
-uint8_t command = 0x00;
-uint8_t commandPlace = 7;
-
 //initializes and clears display
 void initDisplay(){	
-	funcSet(0, 1, 1); //exteded instrution set
+	uint16_t i = 0;
+	while(i < 505){
+		sendByte(true, 0x00);
+		i++;
+	}
+	setRow(0);
+	funcSet(0, 0, 1); //exteded instrution set
 	biasSet(4); //sets display bias
-	VSet(37); //sets display voltage/contrast
-	funcSet(0, 1, 0); //basic instruction set
-	dispConfig(5); // 0 - blank, 1 - all on, 4-normal, 5-inverse
+	VSet(40); //sets display voltage/contrast
+	funcSet(0, 0, 0); //basic instruction set
+	dispConfig(4); // 0 - blank, 1 - all on, 4-normal, 5-inverse
 }
 
-//draws the screen (columns 2-82/84 and rows 0-48/48) 
-void drawScreen(){
+//draws a XDIM (W) x 8 (H) row to the screen
+void drawRow(){
 	int i;
-	int j;
-	for (i = 0; i < 12; i++){
-			sendByte(true, 0x00);
-	}
 	for (i = 0; i < XDIM; i++) {
-		for (j = 0; j < YDIM; j++){
-			sendByte(true, currentDisplay[i][j]);
-		}
+			sendByte(true, lastRow[i]);
 	}
-	for (i = 0; i < 12; i++){
-		sendByte(true, 0x00);
-	}
+}
+
+//sets the display address pointer to the beginning of specified row
+void setRow(uint8_t rowNum){
+	sendByte(false, (0x40 + rowNum));
+	sendByte(false, 0x80);
 }
 
 //sets display power on/off, entry mode, and instruction set 

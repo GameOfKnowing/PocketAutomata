@@ -13,7 +13,10 @@ void initDisplay();
 void splashScreen();
 
 //draws the full screen
-void drawScreen();
+void drawRow();
+
+//sets display address pointer to the beginning of a row
+void setRow(uint8_t rowNum);
 
 //switches state of one pixel, leaving the rest the same
 void switchPixel( uint8_t x, uint8_t y);

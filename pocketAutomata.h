@@ -12,15 +12,18 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include "pcd5110.h"
-#include "tinyEEPROM.h"
+//#include "tinyEEPROM.h"
 #include "rule110.h"
 
 #define DC PB1
 #define DO PB0
 #define SCLK PB2
-#define XDIM 80
+#define XDIM 84
 #define YDIM 6
+#define REDELAYMS 100
 
-uint8_t currentDisplay[XDIM][YDIM];
+uint8_t firstRow[XDIM];
+uint8_t lastRow[XDIM];
+uint8_t newRow[XDIM];
 
 void blink();

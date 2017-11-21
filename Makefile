@@ -4,7 +4,7 @@
 DEVICE      = attiny85
 CLOCK      = 8000000
 PROGRAMMER = -c usbtiny 
-OBJECTS    = pocketAutomata.o rule110.o pcd5110.o tinyEEPROM.o
+OBJECTS    = pocketAutomata.o rule110.o pcd5110.o
 # for ATTiny85
 # see http://www.engbedded.com/fusecalc/
 FUSES       = -U lfuse:w:0xe2:m -U hfuse:w:0xdf:m -U efuse:w:0xff:m
@@ -16,7 +16,7 @@ COMPILE = avr-gcc -Wall -Os -DF_CPU=$(CLOCK) -mmcu=$(DEVICE)
 # symbolic targets:
 all:	main.hex
 
-pocketAutomata.o: pocketAutomata.c pcd5110.h rule110.h pocketAutomata.h tinyEEPROM.h
+pocketAutomata.o: pocketAutomata.c pcd5110.h rule110.h pocketAutomata.h
 
 .c.o:
 	$(COMPILE) -c $< -o $@
