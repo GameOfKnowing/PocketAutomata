@@ -1,9 +1,9 @@
 /************************************************************
 *            Pocket Automata Bill of Materials              *
-*                    By Daniel Lytle 						*
-*                  danieljlytle@aol.com						*
-*  Recommended components and sources for building your own	*
-*   Pocket Automata device. Please let me know if any of 	*
+*                    By Daniel Lytle 			    *
+*                  danieljlytle@aol.com		  	    *
+*  Recommended components and sources for building your own *
+*   Pocket Automata device. Please let me know if any of    *
 *    these components are discontinued/approaching EOL.     *
 ************************************************************/
 
