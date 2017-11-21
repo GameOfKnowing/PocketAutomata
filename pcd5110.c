@@ -15,46 +15,25 @@ uint8_t commandPlace = 7;
 void initDisplay(){	
 	funcSet(0, 1, 1); //exteded instrution set
 	biasSet(4); //sets display bias
-	VSet(25); //sets display voltage/contrast
-	funcSet(0, 1, 0); 
-	dispConfig(4); // 0 - blank, 2 - normal, 1 - all on
+	VSet(37); //sets display voltage/contrast
+	funcSet(0, 1, 0); //basic instruction set
+	dispConfig(5); // 0 - blank, 1 - all on, 4-normal, 5-inverse
 }
 
-//draws the full screen
+//draws the screen (columns 2-82/84 and rows 0-48/48) 
 void drawScreen(){
 	int i;
 	int j;
+	for (i = 0; i < 12; i++){
+			sendByte(true, 0x00);
+	}
 	for (i = 0; i < XDIM; i++) {
 		for (j = 0; j < YDIM; j++){
 			sendByte(true, currentDisplay[i][j]);
 		}
 	}
-}
-
-//switches one pixel, leaving the rest the same
-void switchPixel(uint8_t x, uint8_t y){
-	currentDisplay[x][y/8] ^= (1 << (y%8));
-	if(x < XDIM){
-		uint8_t xCommand = 128 + x;
-		uint8_t yCommand = 64 + (y/8);
-		//sets memory pointer to correct location
-		sendByte(false, xCommand);
-		sendByte(false, yCommand);
-		//writes new bit value
-		sendByte(true, currentDisplay[x][y/8]);
-		//sets memory pointer back to 0,0
-		sendByte(false, 0x80);
-		sendByte(false, 0x40);
-	}
-}
-
-//returns the current value of 1 pixel
-bool getPixel(uint8_t x, uint8_t y){
-	if (currentDisplay[x][y/8] & (1 << y%8)){
-		return true;
-	}
-	else{
-		return false;
+	for (i = 0; i < 12; i++){
+		sendByte(true, 0x00);
 	}
 }
 
@@ -107,6 +86,7 @@ void sendByte(bool isData, uint8_t byte){
 	else{ 
 		PORTB &= ~(1<<DC); //indicates display command transfer
 	}
+	
 	int i;
 	for(i = 7; i >= 0; i--){
 		PORTB &= ~(1<<DO);
@@ -114,8 +94,38 @@ void sendByte(bool isData, uint8_t byte){
 		pulseClock();
 	}
 }
-	
+
+//sends a clock pulse
 void pulseClock(){
 	PORTB |= (1 << SCLK);
+	_delay_us(5);
 	PORTB &= ~(1 << SCLK);
+	_delay_us(5);
 }
+
+/*//switches one pixel, leaving the rest the same
+void switchPixel(uint8_t x, uint8_t y){
+	currentDisplay[x][y/8] ^= (1 << (y%8));
+	if((x < XDIM) && (y < XDIM*8)){
+		uint8_t xCommand = 0x80 + x;
+		uint8_t yCommand = 0x40 + (y/8);
+		//sets memory pointer to correct location
+		sendByte(false, xCommand);
+		sendByte(false, yCommand);
+		//writes new bit value
+		sendByte(true, currentDisplay[x][y/8]);
+		//sets memory pointer back to 0,0
+		sendByte(false, 0x80);
+		sendByte(false, 0x40);
+	}
+} 
+
+//returns the current value of 1 pixel
+bool getPixel(uint8_t x, uint8_t y){
+	if (currentDisplay[x][y/8] & (1 << y%8)){
+		return true;
+	}
+	else{
+		return false;
+	}
+}  */

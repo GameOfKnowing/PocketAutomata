@@ -6,25 +6,22 @@
 *  					& 5110 displays. 						*
 ************************************************************/
 #include "pocketAutomata.h"
-#include "pcd5110.h"
-#include "rule110.h"
-#include "tinyEEPROM.h"
 
 int main(void) {
 
 	DDRB |= (1<<DO)|(1<<DC)|(1<<SCLK); //sets data out, clock, and DC pins as outputs
 	PORTB &= ~(1<<DC); //sets DC to 0
-
-    uint8_t i = 0;
-    int8_t j = 0;
     
-    //Creates starting configuration with pseudo-random values
+    int i;
+	int j;
     for(i = 0; i < XDIM; i++){
     	for(j = 0; j < YDIM; j++){
-    		currentDisplay[i][j] = j;
+    		currentDisplay[i][j] = 0x00;
     	}
     } 
-    
+
+	currentDisplay[70][3] = 0x80;
+
 	initDisplay();
 	drawScreen();
 
@@ -37,8 +34,8 @@ int main(void) {
 }
 
 void blink(){
-	PORTB |= (1<<DC);
-	_delay_ms(250);
 	PORTB &= ~(1<<DC);
+	_delay_ms(250);
+	PORTB |= (1<<DC);
 	_delay_ms(250);
 }

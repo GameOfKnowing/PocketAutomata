@@ -37,5 +37,5 @@ void dispConfig(uint8_t config);
 void sendByte(bool isData, uint8_t byte);
 
 //pulses SCLK
-
 void pulseClock();
+
